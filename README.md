@@ -1,30 +1,71 @@
-# PostgreSQL Dashboard on GitHub Pages
 
-This project automates daily queries to a PostgreSQL database and updates a dashboard hosted on GitHub Pages. The dashboard provides interactive visualizations based on the latest data and is designed as a proof-of-concept for showcasing data insights.
+# PostgreSQL Dashboard Visualization Script
+
+This script generates visualizations from PostgreSQL data for factions in a tabletop gaming context. The visualizations include dual-axis charts for performance metrics and rank tables based on faction statistics.
 
 ## Features
-- Automatically queries a PostgreSQL database using GitHub Actions.
-- Processes and saves extracted data as CSV files.
-- Updates an interactive dashboard hosted on GitHub Pages.
-- Fully automated workflow, running daily.
+- Supports both **charts** and **rank table** visualizations.
+- Allows filtering by one or more factions.
+- Offers a **test mode** to run the script with dummy data.
+- Saves visualizations as HTML files for easy sharing and review.
 
-## How It Works
-1. A GitHub Actions workflow queries the PostgreSQL database and retrieves the latest data.
-2. The data is saved as a static CSV file locally.
-3. The GitHub Pages dashboard dynamically reads and visualizes the data.
+## Arguments
+### `--test`
+- **Description**: Run the script in test mode using dummy data.
+- **Purpose**: Useful for quickly testing output without requiring real data or environment variables.
+- **Example**:
+  ```bash
+  python visualisation.py --test
+  ```
 
-## Usage
-- **Public Repository**: The dashboard is publicly accessible at [GitHub Pages URL](https://<your-username>.github.io/<repo-name>).
+### `--faction`
+- **Description**: Filter by one or more faction names.
+- **Purpose**: Focuses the visualization on specific factions. If no factions are specified, all factions will be included.
+- **Example**:
+  ```bash
+  python visualisation.py --faction "Maggotkin Of Nurgle" "Stormcast Eternals"
+  ```
+- **Error Handling**: If no matching factions are found, the script will list available factions.
 
-## Development
-- Clone the repository to modify the dashboard or the query logic.
-- Update the SQL query in `queries/query_file.sql` for custom database queries. This file is ignored by Git to prevent sensitive information from being shared.
-- Configure the environment variables in your local environment:
-  - `CSV_OUTPUT_PATH`: (Optional) Specifies the file path where the output CSV should be saved. Defaults to `data/latest_data.csv` if not set.
-  - `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`: Required for connecting to the PostgreSQL database.
-- Customize the dashboard visuals in the `index.html` file.
+### `--viz`
+- **Description**: Specify the type of visualization to generate.
+- **Options**:
+  - `charts`: Generates dual-axis charts showing performance metrics (e.g., total games, win rate).
+  - `rank`: Generates a rank table for the latest month, including rank changes.
+- **Default**: `charts`
+- **Example**:
+  ```bash
+  python visualisation.py --viz rank
+  ```
 
-## Security
-- Data is sanitized and aggregated to ensure no sensitive information is exposed.
+## Usage Examples
+1. **Run in Test Mode**:
+   ```bash
+   python visualisation.py --test
+   ```
 
----
+2. **Generate Charts for All Factions**:
+   ```bash
+   python visualisation.py --viz charts
+   ```
+
+3. **Generate Rank Table for Specific Factions**:
+   ```bash
+   python visualisation.py --viz rank --faction "Maggotkin Of Nurgle"
+   ```
+
+4. **Handle Non-Matching Factions**:
+   If no matching factions are found, the script will raise an error and display available factions.
+
+## Output
+- **Charts**: Saved as `visualisations/overlayed_performance_metrics_dual_axes.html`.
+- **Rank Table**: Saved as `visualisations/rank_table.html`.
+- **Test Mode Outputs**: Saved in the `test_visualisations/` directory.
+
+## Notes
+- Ensure the required Python dependencies are installed:
+  ```bash
+  pip install pandas plotly
+  ```
+- The `dummy_data/` folder is used in test mode and must contain valid test data.
+- The script handles both real and test data seamlessly, ensuring flexible usage for development and production environments.
