@@ -76,7 +76,7 @@ jobs:
       # Step 4: Run the visualisation script with dummy data
       - name: Run Visualisation Script with Dummy Data
         env:
-          CSV_OUTPUT_PATH: dummy_data/test_data.csv
+          CSV_OUTPUT_PATH: dummy_data/dummy_data.csv
           VISUAL_OUTPUT_PATH: visualisations/test_visualisation.html
         run: python visualisation.py
 
