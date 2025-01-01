@@ -52,3 +52,39 @@ jobs:
           git add visualisations/latest_visualisation.html
           git commit -m "Update visualisation"
           git push
+
+  test-visualisation:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      # Step 3: Install dependencies
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas plotly
+
+      # Step 4: Run the visualisation script with dummy data
+      - name: Run Visualisation Script with Dummy Data
+        env:
+          CSV_OUTPUT_PATH: dummy_data/test_data.csv
+          VISUAL_OUTPUT_PATH: visualisations/test_visualisation.html
+        run: python visualisation.py
+
+      # Step 5: Commit and push test visualisation
+      - name: Commit and Push Test Visualisation
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add visualisations/test_visualisation.html
+          git commit -m "Update test visualisation"
+          git push
