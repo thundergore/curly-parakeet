@@ -154,6 +154,16 @@ def create_visualisations(df, test_mode=False):
     print(f"Overlayed chart with dual axes saved to {fig_path}")
 
 def create_rank_table(df, test_mode=False):
+    """
+    Creates a rank table from the given DataFrame and saves it as an HTML file.
+
+    Parameters:
+    df (pandas.DataFrame): The input DataFrame containing the data.
+    test_mode (bool): If True, sets up a test environment. Default is False.
+
+    Returns:
+    None
+    """
     output_folder = 'visualisations'
 
     if test_mode:
