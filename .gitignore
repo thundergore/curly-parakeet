@@ -166,3 +166,5 @@ queries/
 
 # Ignore the data folder to prevent leaking data
 data/
+
+.DS_Store
