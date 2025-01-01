@@ -7,11 +7,24 @@ import argparse
 import shutil
 
 def load_data(test_mode=False):
+    """
+    Load data from a CSV file.
+    This function loads data from a CSV file. If `test_mode` is set to True, it loads data from a dummy CSV file 
+    located at 'dummy_data/dummy_data.csv'. Otherwise, it loads data from 'latest_data.csv' located in the directory 
+    specified by the environment variable 'CSV_OUTPUT_PATH'. If the environment variable is not set, it defaults to 
+    the 'data' directory.
+    Args:
+        test_mode (bool): If True, load data from the dummy CSV file. Default is False.
+    Returns:
+        pandas.DataFrame: The data loaded from the CSV file.
+    Raises:
+        FileNotFoundError: If the specified CSV file does not exist.
+    """
     # Determine the file path based on the mode
     if test_mode:
         csv_path = 'dummy_data/dummy_data.csv'
     else:
-        csv_path = os.getenv('CSV_OUTPUT_PATH', 'data/latest_data.csv')
+        csv_path = os.path.join(os.getenv('CSV_OUTPUT_PATH', 'data'), 'latest_data.csv')
 
     if not os.path.exists(csv_path):
         raise FileNotFoundError(f"CSV file not found at {csv_path}")
@@ -19,6 +32,17 @@ def load_data(test_mode=False):
     return pd.read_csv(csv_path)
 
 def setup_test_environment():
+    """
+    Sets up the test environment by creating a fresh test-specific output folder.
+
+    This function performs the following steps:
+    1. Checks if a folder named 'test_visualisations' exists.
+    2. If it exists, removes the folder and its contents.
+    3. Creates a new 'test_visualisations' folder.
+
+    Returns:
+        str: The path to the test-specific output folder.
+    """
     # Test-specific output folder
     test_output_folder = 'test_visualisations'
     if os.path.exists(test_output_folder):
@@ -27,6 +51,19 @@ def setup_test_environment():
     return test_output_folder
 
 def filter_factions(df, factions):
+    """
+    Filters the DataFrame to include only the specified factions.
+
+    Args:
+        df (pandas.DataFrame): The DataFrame containing the data.
+        factions (list): A list of faction names to filter by.
+
+    Returns:
+        pandas.DataFrame: The filtered DataFrame containing only the specified factions.
+
+    Raises:
+        ValueError: If no matching factions are found in the DataFrame.
+    """
     if factions:
         filtered_df = df[df['faction'].isin(factions)]
         if filtered_df.empty:
@@ -36,6 +73,23 @@ def filter_factions(df, factions):
     return df
 
 def create_visualisations(df, test_mode=False):
+    """
+    Generates visualizations for performance metrics including Win Rates and Total Games.
+
+    Parameters:
+    df (pandas.DataFrame): DataFrame containing the data to be visualized. 
+                           Expected columns: 'month_formatted', 'win_rate', 'weighted_win_rate', 'total_games', 'faction'.
+    test_mode (bool): If True, sets up a test environment for saving the visualizations. Default is False.
+
+    Returns:
+    None: The function saves the generated visualization as an HTML file in the specified output folder.
+
+    The function creates an overlayed chart with dual Y-axes:
+    - Left Y-axis: Total Games (Bar chart)
+    - Right Y-axis: Win Rate and Weighted Win Rate (Line charts)
+
+    The chart is saved as 'overlayed_performance_metrics_dual_axes.html' in the 'visualisations' folder or a test folder if test_mode is True.
+    """
     output_folder = 'visualisations'
 
     if test_mode:
