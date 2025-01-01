@@ -167,4 +167,8 @@ queries/
 # Ignore the data folder to prevent leaking data
 data/
 
+# Ignore the .DS_Store files created by macOS
 .DS_Store
+
+# Ignore test files
+test_visualisations/
