@@ -2,10 +2,15 @@
 import pandas as pd
 import plotly.express as px
 import os
+import argparse
 
-def load_data():
-    # Load the data from the CSV file
-    csv_path = os.getenv('CSV_OUTPUT_PATH', 'data/latest_data.csv')
+def load_data(test_mode=False):
+    # Determine the file path based on the mode
+    if test_mode:
+        csv_path = 'dummy_data/dummy_data.csv'
+    else:
+        csv_path = os.getenv('CSV_OUTPUT_PATH', 'data/latest_data.csv')
+
     if not os.path.exists(csv_path):
         raise FileNotFoundError(f"CSV file not found at {csv_path}")
     
@@ -52,5 +57,9 @@ def create_visualisations(df):
     print(f"Scatter plot saved to {fig3_path}")
 
 if __name__ == "__main__":
-    data = load_data()
+    parser = argparse.ArgumentParser(description="Generate visualisations from CSV data.")
+    parser.add_argument("--test", action="store_true", help="Run the script in test mode using dummy data.")
+    args = parser.parse_args()
+
+    data = load_data(test_mode=args.test)
     create_visualisations(data)
